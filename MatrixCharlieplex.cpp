@@ -99,7 +99,7 @@ namespace MatrixCharlieplex {
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
             return true;
-        } else { //The objective is to
+        } else { //The objective is to check the given Node doesn't get conflict
             uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
             uint8_t _chkClear = 0; // Whether it doesn't conflict with ActiveNode
