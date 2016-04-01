@@ -1,0 +1,8 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Created & Collected by ${user}. Copyright ${date?date?string("yyyy")}
+${licensePrefix}Released for the sake of knowledge for mankind under The MIT License.
+<#if licenseLast??>
+${licenseLast}
+</#if>
