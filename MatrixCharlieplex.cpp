@@ -52,6 +52,7 @@ namespace MatrixCharlieplex {
     }
 
     // Help from http://www.instructables.com/id/Charlieplexing-the-Arduino/
+
     MatrixCharlieplex::_upPin(uint8_t pin) {
         pinMode(pin, OUTPUT);
         digitalWrite(pin, HIGH);
@@ -79,7 +80,7 @@ namespace MatrixCharlieplex {
                     _downPin(pin->gnd);
                     break;
                 default:
-                    if(this->_state)
+                    if (this->_state)
                         _sinkPin(this->_activeNode->vcc);
                     break;
             };
@@ -90,7 +91,7 @@ namespace MatrixCharlieplex {
                 case pin->gnd:
                     break;
                 default:
-                    if(this->_state)
+                    if (this->_state)
                         _sinkPin(this->_activeNode->gnd);
                     break;
             };
@@ -98,39 +99,47 @@ namespace MatrixCharlieplex {
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
             return true;
-        } else { //To do
-            uint8_t _chkMatch = 0;
-            uint8_t _chkConflict = 0;
-            uint8_t _chkClear = 0;
+        } else { //The objective is to
+            uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
+            uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
+            uint8_t _chkClear = 0; // Whether it doesn't conflict with ActiveNode
             switch (this->_activeNode->vcc) {
                 case pin->vcc:
-                    _chkMatch = (_chkMatch<<1)|1;
+                    _chkMatch = (_chkMatch << 1) | 1;
                     break;
                 case pin->gnd:
-                    _chkConflict = (_chkConflict<<1)|1;
+                    _chkConflict = (_chkConflict << 1) | 1;
                     break;
                 default:
-                    _chkClear = (_chkClear<<1)|1;
+                    _chkClear = (_chkClear << 1) | 1;
                     break;
             };
             switch (this->_activeNode->gnd) {
                 case pin->vcc:
-                    _chkConflict = (_chkConflict<<1)|1;
+                    _chkConflict = (_chkConflict << 1) | 1;
                     break;
                 case pin->gnd:
-                    _chkMatch = (_chkMatch<<1)|1;
+                    _chkMatch = (_chkMatch << 1) | 1;
                     break;
                 default:
-                    _chkClear = (_chkClear<<1)|1;
+                    _chkClear = (_chkClear << 1) | 1;
                     break;
             };
-            if(0b00 & _chkClear){
-                    _sinkPin(pin->vcc);
-                    _sinkPin(pin->gnd);
+            if (0b11 == _chkClear) { // No harm in changing
+                _sinkPin(pin->vcc);
+                _sinkPin(pin->gnd);
+                return true;
+            } else if (0b11 & _chkConflict) { // If any conflict happens
+                return false;
+            } else if (0b11 == _chkMatch) { // Exact match to ActiveNode
+                _sinkPin(pin->vcc);
+                _sinkPin(pin->gnd);
+                this->_activeNode->vcc = 0;
+                this->_activeNode->gnd = 0;
+                this->_state = MXCHARLIE_INACTIVE;
+                return true;
             }
-                    this->_activeNode->vcc = 0;
-                    this->_activeNode->gnd = 0;
-            return true;
+            return false;
         }
         return false;
     }
