@@ -20,6 +20,7 @@ Hence, the "X" is marked, where they cannot be both at same time.
 
 It's best practice to connect the Anodes in same row & then connect the Cathodes.
 e.g. Cathode Connection for a 5 pin setup
+
          (-)C A T H O D E
     R  1 -> 2 3 4 5
     O  2 -> 1 3 4 5
