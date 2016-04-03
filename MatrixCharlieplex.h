@@ -30,9 +30,12 @@
 #define MXCHARLIE_ACTIVE 0x01
 #define MXCHARLIE_INACTIVE 0x00
 
+#define MXCHARLIE_CC 0x01
+#define MXCHARLIE_CA 0x02
+
 #include<Arduino.h>
 
-namespace MatrixCharlieplex {
+namespace ArduinoMatrixCharlieplex {
     typedef struct{
         uint8_t vcc;
         uint8_t gnd;
@@ -41,15 +44,19 @@ namespace MatrixCharlieplex {
     class MatrixCharlieplex{
     public:
         MatrixCharlieplex(uint8_t pins[]);
+        DiodeNode* GetActiveNode();
+        uint8_t* GetPins();
         boolean TurnOn(uint8_t row, uint8_t col);
         boolean TurnOff(uint8_t row, uint8_t col);
+        boolean TurnOn(uint16_t index);
+        boolean TurnOff(uint16_t index);
         boolean Clear();
         boolean Reset();
 
     private:
         uint8_t* _pins;
         uint8_t _noOfPins;
-        uint8_t _maxNode;
+        uint16_t _maxNode;
         uint8_t _state;
         DiodeNode* _activeNode;
         void _init(boolean isReset);
@@ -58,6 +65,7 @@ namespace MatrixCharlieplex {
         boolean _sinkPin(uint8_t pin);
         boolean _setNode(DiodeNode* pin, uint8_t state);
         DiodeNode* _getNode(uint8_t row, uint8_t col);
+        DiodeNode* _getNode(uint16_t index);
     };
 }
 #endif /* MATRIXCHARLIEPLEX_H */
