@@ -36,12 +36,13 @@
 #include<Arduino.h>
 
 namespace ArduinoMatrixCharlieplex {
-    typedef struct{
+
+    typedef struct {
         uint8_t vcc;
         uint8_t gnd;
     } DiodeNode;
 
-    class MatrixCharlieplex{
+    class MatrixCharlieplex {
     public:
         MatrixCharlieplex(uint8_t pins[]);
         DiodeNode* GetActiveNode();

@@ -49,7 +49,7 @@ namespace ArduinoMatrixCharlieplex {
 
     MatrixCharlieplex::MatrixCharlieplex(uint8_t pins[]) {
         this->_pins = pins;
-        this->_noOfPins = sizeof(pins)/sizeof(uint8_t);
+        this->_noOfPins = sizeof (pins) / sizeof (uint8_t);
         this->_maxNode = this->_noOfPins * (this->_noOfPins - 1);
         this->_activeNode = new DiodeNode();
         this->_init(false);
@@ -61,7 +61,7 @@ namespace ArduinoMatrixCharlieplex {
     void MatrixCharlieplex::_init(boolean isReset) {
         // Sink all output pins
         for (uint8_t i = 0; i < this->_noOfPins; i++) {
-            _sinkPin(*(this->_pins+i));
+            _sinkPin(*(this->_pins + i));
         }
         this->_activeNode->vcc = 0;
         this->_activeNode->gnd = 0;
@@ -73,41 +73,31 @@ namespace ArduinoMatrixCharlieplex {
     boolean MatrixCharlieplex::_upPin(uint8_t pin) {
         pinMode(pin, OUTPUT);
         digitalWrite(pin, HIGH);
-//        Serial.print(pin);
-//        Serial.println("-going up");
+        //        Serial.print(pin);
+        //        Serial.println("-going up");
         return true;
     }
 
     boolean MatrixCharlieplex::_downPin(uint8_t pin) {
         pinMode(pin, OUTPUT);
         digitalWrite(pin, LOW);
-//        Serial.print(pin);
-//        Serial.println("-going down");
+        //        Serial.print(pin);
+        //        Serial.println("-going down");
         return true;
     }
 
     boolean MatrixCharlieplex::_sinkPin(uint8_t pin) {
         pinMode(pin, INPUT);
         digitalWrite(pin, LOW);
-//        Serial.print(pin);
-//        Serial.println("-going sink");
+        //        Serial.print(pin);
+        //        Serial.println("-going sink");
         return true;
     }
 
     boolean MatrixCharlieplex::_setNode(DiodeNode* pin, uint8_t state) {
         if (state) {
             uint8_t _chkMatch = 0;
-            //            switch (this->_activeNode->vcc) {
-            //                case pin->vcc:
-            //                    break;
-            //                case pin->gnd:
-            //                    _downPin(pin->gnd);
-            //                    break;
-            //                default:
-            //                    if (this->_state)
-            //                        _sinkPin(this->_activeNode->vcc);
-            //                    break;
-            //            };
+
             if (this->_activeNode->vcc == pin->vcc) {
                 _chkMatch |= 0b10;
             } else if (this->_activeNode->vcc == pin->gnd) {
@@ -117,21 +107,7 @@ namespace ArduinoMatrixCharlieplex {
                 if (this->_state)
                     _sinkPin(this->_activeNode->vcc);
             }
-//            if (this->_activeNode->vcc != pin->vcc && this->_activeNode->vcc != pin->gnd) {
-//                if (this->_state)
-//                    _sinkPin(this->_activeNode->vcc);
-//            }
-            //            switch (this->_activeNode->gnd) {
-            //                case pin->vcc:
-            //                    _upPin(pin->vcc);
-            //                    break;
-            //                case pin->gnd:
-            //                    break;
-            //                default:
-            //                    if (this->_state)
-            //                        _sinkPin(this->_activeNode->gnd);
-            //                    break;
-            //            };
+
             if (this->_activeNode->gnd == pin->vcc) {
                 _upPin(pin->vcc);
                 _chkMatch |= 0b10;
@@ -141,45 +117,25 @@ namespace ArduinoMatrixCharlieplex {
                 if (this->_state)
                     _sinkPin(this->_activeNode->gnd);
             }
-//            if (this->_activeNode->gnd != pin->vcc && this->_activeNode->gnd != pin->gnd) {
-//                if (this->_state)
-//                    _sinkPin(this->_activeNode->gnd);
-//            }
-            if((0b10 & _chkMatch) != 0b10){
+
+            // Now Set the requested pin's state
+            //_upPin(pin->vcc);
+            //_downPin(pin->gnd);
+            if ((0b10 & _chkMatch) != 0b10) {
                 _upPin(pin->vcc);
             }
-            if((0b01 & _chkMatch) != 0b01){
+            if ((0b01 & _chkMatch) != 0b01) {
                 _downPin(pin->gnd);
             }
-//            _upPin(pin->vcc);
-//            _downPin(pin->gnd);
             this->_activeNode->vcc = pin->vcc;
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
-//            Serial.print("Supplied: ");
-//            Serial.print(pin->vcc);
-//            Serial.print("-");
-//            Serial.println(pin->gnd);
-//            Serial.print("Active: ");
-//            Serial.print(this->_activeNode->vcc);
-//            Serial.print("-");
-//            Serial.println(this->_activeNode->gnd);
             return true;
         } else { //The objective is to check the given Node doesn't get conflict
             uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
             uint8_t _chkClear = 0; // Whether it doesn't conflict with ActiveNode
-//            switch (this->_activeNode->vcc) {
-//                case pin->vcc:
-//                    _chkMatch = (_chkMatch << 1) | 1;
-//                    break;
-//                case pin->gnd:
-//                    _chkConflict = (_chkConflict << 1) | 1;
-//                    break;
-//                default:
-//                    _chkClear = (_chkClear << 1) | 1;
-//                    break;
-//            };
+
             if (this->_activeNode->vcc == pin->vcc) {
                 _chkMatch = (_chkMatch << 1) | 1;
             } else if (this->_activeNode->vcc == pin->gnd) {
@@ -188,17 +144,6 @@ namespace ArduinoMatrixCharlieplex {
                 _chkClear = (_chkClear << 1) | 1;
             }
 
-//            switch (this->_activeNode->gnd) {
-//                case pin->vcc:
-//                    _chkConflict = (_chkConflict << 1) | 1;
-//                    break;
-//                case pin->gnd:
-//                    _chkMatch = (_chkMatch << 1) | 1;
-//                    break;
-//                default:
-//                    _chkClear = (_chkClear << 1) | 1;
-//                    break;
-//            };
             if (this->_activeNode->vcc == pin->vcc) {
                 _chkConflict = (_chkConflict << 1) | 1;
             } else if (this->_activeNode->vcc == pin->gnd) {
@@ -240,16 +185,8 @@ namespace ArduinoMatrixCharlieplex {
          *            Row: 1 | 2 | 3 | 4 | 5
          *         Column: 1 | 2 | 3 | 4 | 5
          */
-        node->vcc = *(this->_pins+(row - 1)); // same as row number
-        node->gnd = *(this->_pins+((col < row) ? (col - 1) : col)); // complicated
-//        Serial.print("Index: ");
-//        Serial.print(row - 1);
-//        Serial.print("-");
-//        Serial.println((col < row) ? (col - 1) : col);
-//        Serial.print("getNode: ");
-//        Serial.print(node->vcc);
-//        Serial.print("-");
-//        Serial.println(node->gnd);
+        node->vcc = *(this->_pins + (row - 1)); // same as row number
+        node->gnd = *(this->_pins + ((col < row) ? (col - 1) : col)); // complicated
         return node;
     }
 
@@ -260,8 +197,8 @@ namespace ArduinoMatrixCharlieplex {
          */
         uint8_t row = (index - 1) / (this->_noOfPins - 1);
         uint8_t col = (index - 1) % (this->_noOfPins - 1);
-        node->vcc = *(this->_pins+row); // same as row number
-        node->gnd = *(this->_pins+((col < row) ? col : (col + 1))); // again complicated
+        node->vcc = *(this->_pins + row); // same as row number
+        node->gnd = *(this->_pins + ((col < row) ? col : (col + 1))); // again complicated
         return node;
     }
 #pragma endregion Private Functions
