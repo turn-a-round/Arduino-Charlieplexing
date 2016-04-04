@@ -52,43 +52,78 @@ namespace ArduinoMatrixCharlieplex {
         this->_noOfPins = sizeof (pins) / sizeof (uint8_t);
         this->_maxNode = this->_noOfPins * (this->_noOfPins - 1);
         this->_activeNode = new DiodeNode();
-        this->_init(false);
+        this->_init(true);
     }
 #pragma endregion Constructor
 
 #pragma region Private Functions
 
-    void MatrixCharlieplex::_init(boolean isReset) {
+    void MatrixCharlieplex::_init(boolean isStart) {
         // Sink all output pins
-        for (uint8_t i = 0; i < this->_noOfPins; i++) {
-            _sinkPin(*(this->_pins + i));
-        }
         this->_activeNode->vcc = 0;
         this->_activeNode->gnd = 0;
         this->_state = MXCHARLIE_INACTIVE;
+        if (isStart) {
+            this->_exeDDRDn = {0b11111110, 0b00111111};
+            this->_exeDDRUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+            this->_exePORTDn = {0b11111110, 0b00111111};
+            this->_exePORTUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+            for (uint8_t i = 0; i < this->_noOfPins; i++) {
+                _sinkPin(*(this->_pins + i));
+            }
+            this->_ioDDR = {this->_exeDDRDn[0], this->_exeDDRDn[1]};
+            this->_ioPORT = {this->_exePORTDn[0], this->_exePORTDn[1]};
+        }
+        _reset();
+    }
+
+    boolean MatrixCharlieplex::_reset() {
+        this->_exeDDRDn = {this->_ioDDR[0], this->_ioDDR[1]};
+        this->_exeDDRUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+        this->_exePORTDn = {this->_ioPORT[0], this->_ioPORT[1]};
+        this->_exePORTUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+        return _execute();
+    }
+
+    boolean MatrixCharlieplex::_execute() {
+        DDRD = DDRD & this->_exeDDRDn[0] | this->_exeDDRUp[0];
+        DDRB = DDRB & this->_exeDDRDn[1] | this->_exeDDRUp[1];
+        PORTD = PORTD & this->_exePORTDn[0] | this->_exePORTUp[0];
+        PORTB = PORTB & this->_exePORTDn[1] | this->_exePORTUp[1];
+        return true;
     }
 
     // Help from http://www.instructables.com/id/Charlieplexing-the-Arduino/
 
     boolean MatrixCharlieplex::_upPin(uint8_t pin) {
-        pinMode(pin, OUTPUT);
-        digitalWrite(pin, HIGH);
+        //        pinMode(pin, OUTPUT);
+        //        digitalWrite(pin, HIGH);
+        BitMan* bm = _getBitMan(pin);
+        //bitWrite(_exePORT[bm->y], bm->x, 1);
+        this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
+        this->_exePORTUp[bm->y] |= 0b1 << bm->x;
         //        Serial.print(pin);
         //        Serial.println("-going up");
         return true;
     }
 
     boolean MatrixCharlieplex::_downPin(uint8_t pin) {
-        pinMode(pin, OUTPUT);
-        digitalWrite(pin, LOW);
+        //        pinMode(pin, OUTPUT);
+        //        digitalWrite(pin, LOW);
+        BitMan* bm = _getBitMan(pin);
+        this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
+        bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
         //        Serial.print(pin);
         //        Serial.println("-going down");
         return true;
     }
 
     boolean MatrixCharlieplex::_sinkPin(uint8_t pin) {
-        pinMode(pin, INPUT);
-        digitalWrite(pin, LOW);
+        //        pinMode(pin, INPUT);
+        //        digitalWrite(pin, LOW);
+        BitMan* bm = _getBitMan(pin);
+        bitWrite(this->_exeDDRDn[bm->y], bm->x, 0);
+        bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
         //        Serial.print(pin);
         //        Serial.println("-going sink");
         return true;
@@ -130,7 +165,8 @@ namespace ArduinoMatrixCharlieplex {
             this->_activeNode->vcc = pin->vcc;
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
-            return true;
+            //return true;
+            return _execute();
         } else { //The objective is to check the given Node doesn't get conflict
             uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
@@ -144,9 +180,9 @@ namespace ArduinoMatrixCharlieplex {
                 _chkClear = (_chkClear << 1) | 1;
             }
 
-            if (this->_activeNode->vcc == pin->vcc) {
+            if (this->_activeNode->gnd == pin->vcc) {
                 _chkConflict = (_chkConflict << 1) | 1;
-            } else if (this->_activeNode->vcc == pin->gnd) {
+            } else if (this->_activeNode->gnd == pin->gnd) {
                 _chkMatch = (_chkMatch << 1) | 1;
             } else {
                 _chkClear = (_chkClear << 1) | 1;
@@ -155,7 +191,8 @@ namespace ArduinoMatrixCharlieplex {
             if (0b11 == _chkClear) { // No harm in changing
                 _sinkPin(pin->vcc);
                 _sinkPin(pin->gnd);
-                return true;
+                //return true;
+                return _execute();
             } else if (0b11 & _chkConflict) { // If any conflict happens
                 return false;
             } else if (0b11 == _chkMatch) { // Exact match to ActiveNode
@@ -164,7 +201,8 @@ namespace ArduinoMatrixCharlieplex {
                 this->_activeNode->vcc = 0;
                 this->_activeNode->gnd = 0;
                 this->_state = MXCHARLIE_INACTIVE;
-                return true;
+                //return true;
+                return _execute();
             }
             return false;
         }
@@ -201,6 +239,13 @@ namespace ArduinoMatrixCharlieplex {
         node->gnd = *(this->_pins + ((col < row) ? col : (col + 1))); // again complicated
         return node;
     }
+
+    BitMan* MatrixCharlieplex::_getBitMan(uint16_t pin) {
+        BitMan* bm = new BitMan();
+        bm->y = pin / 8;
+        bm->x = pin % 8;
+        return bm;
+    }
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -235,9 +280,9 @@ namespace ArduinoMatrixCharlieplex {
 
     boolean MatrixCharlieplex::Reset() {
         //if (_setNode(this->_activeNode, LOW))
-        //    return _init(true);
+        //    return _init(false);
         //return false;
-        _init(true);
+        _init(false);
         return true;
     }
 #pragma endregion Public Functions

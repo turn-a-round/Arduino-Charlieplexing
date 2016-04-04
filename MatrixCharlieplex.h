@@ -31,7 +31,9 @@
 #define MXCHARLIE_INACTIVE 0x00
 
 #define MXCHARLIE_CC 0x01
-#define MXCHARLIE_CA 0x02
+#define MXCHARLIE_CA 0x00
+
+#define MXCHARLIE_UPMASK 0b00000000
 
 #include<Arduino.h>
 
@@ -42,9 +44,14 @@ namespace ArduinoMatrixCharlieplex {
         uint8_t gnd;
     } DiodeNode;
 
+    typedef struct {
+        uint8_t x;
+        uint8_t y;
+    } BitMan;
+
     class MatrixCharlieplex {
     public:
-        MatrixCharlieplex(uint8_t pins[]);
+        MatrixCharlieplex(uint8_t pins[], uint8_t commonType);
         DiodeNode* GetActiveNode();
         uint8_t* GetPins();
         boolean TurnOn(uint8_t row, uint8_t col);
@@ -55,18 +62,27 @@ namespace ArduinoMatrixCharlieplex {
         boolean Reset();
 
     private:
+        uint8_t _exeDDRUp[];
+        uint8_t _exeDDRDn[];
+        uint8_t _exePORTUp[];
+        uint8_t _exePORTDn[];
+        uint8_t _ioDDR[];
+        uint8_t _ioPORT[];
         uint8_t* _pins;
         uint8_t _noOfPins;
         uint16_t _maxNode;
         uint8_t _state;
         DiodeNode* _activeNode;
-        void _init(boolean isReset);
+        void _init(boolean isStart);
+        boolean _reset();
+        boolean _execute();
         boolean _upPin(uint8_t pin);
         boolean _downPin(uint8_t pin);
         boolean _sinkPin(uint8_t pin);
         boolean _setNode(DiodeNode* pin, uint8_t state);
         DiodeNode* _getNode(uint8_t row, uint8_t col);
         DiodeNode* _getNode(uint16_t index);
+        BitMan* _getBitMan(uint16_t pin);
     };
 }
 #endif /* MATRIXCHARLIEPLEX_H */
