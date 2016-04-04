@@ -30,8 +30,8 @@
 #define MXCHARLIE_ACTIVE 0x01
 #define MXCHARLIE_INACTIVE 0x00
 
-#define MXCHARLIE_CC 0x01
-#define MXCHARLIE_CA 0x00
+#define MXCHARLIE_CA 0b01
+#define MXCHARLIE_CC 0b00
 
 #define MXCHARLIE_UPMASK 0b00000000
 
@@ -51,9 +51,10 @@ namespace ArduinoMatrixCharlieplex {
 
     class MatrixCharlieplex {
     public:
-        MatrixCharlieplex(uint8_t pins[], uint8_t commonType);
-        DiodeNode* GetActiveNode();
-        uint8_t* GetPins();
+        //MatrixCharlieplex();
+        MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType);
+        //DiodeNode* GetActiveNode();
+        //uint8_t* GetPins();
         boolean TurnOn(uint8_t row, uint8_t col);
         boolean TurnOff(uint8_t row, uint8_t col);
         boolean TurnOn(uint16_t index);
@@ -62,20 +63,22 @@ namespace ArduinoMatrixCharlieplex {
         boolean Reset();
 
     private:
-        uint8_t _exeDDRUp[];
-        uint8_t _exeDDRDn[];
-        uint8_t _exePORTUp[];
-        uint8_t _exePORTDn[];
-        uint8_t _ioDDR[];
-        uint8_t _ioPORT[];
+        uint8_t _exeDDRUp[2];
+        uint8_t _exeDDRDn[2];
+        uint8_t _exePORTUp[2];
+        uint8_t _exePORTDn[2];
+        uint8_t _ioDDR[2];
+        uint8_t _ioPORT[2];
         uint8_t* _pins;
         uint8_t _noOfPins;
         uint16_t _maxNode;
         uint8_t _state;
+        uint8_t _commonType;
         DiodeNode* _activeNode;
         void _init(boolean isStart);
+        //void _print();
         boolean _reset();
-        boolean _execute();
+        boolean _execute(); //(boolean needClearance);
         boolean _upPin(uint8_t pin);
         boolean _downPin(uint8_t pin);
         boolean _sinkPin(uint8_t pin);
