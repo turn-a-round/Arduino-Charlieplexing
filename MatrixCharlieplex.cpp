@@ -227,7 +227,7 @@ namespace ArduinoMatrixCharlieplex {
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
             //return true;
-            return _execute();
+            return _execute(true);
         } else { //The objective is to check the given Node doesn't get conflict
             uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
@@ -253,7 +253,7 @@ namespace ArduinoMatrixCharlieplex {
                 _sinkPin(pin->vcc);
                 _sinkPin(pin->gnd);
                 //return true;
-                return _execute();
+                return _execute(true);
             } else if (0b11 & _chkConflict) { // If any conflict happens
                 return false;
             } else if (0b11 == _chkMatch) { // Exact match to ActiveNode
@@ -263,7 +263,7 @@ namespace ArduinoMatrixCharlieplex {
                 this->_activeNode->gnd = 0;
                 this->_state = MXCHARLIE_INACTIVE;
                 //return true;
-                return _execute();
+                return _execute(true);
             }
             return false;
         }
