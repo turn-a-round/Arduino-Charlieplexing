@@ -157,8 +157,10 @@ namespace ArduinoMatrixCharlieplex {
         BitMan* bm = _getBitMan(pin);
         //this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
         //this->_exePORTUp[bm->y] |= 0b1 << bm->x;
-        bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
-        bitWrite(this->_exePORTUp[bm->y], bm->x, 1);
+        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
+        //bitWrite(this->_exePORTUp[bm->y], bm->x, 1);
+        bitSet(this->_exeDDRUp[bm->y], bm->x);
+        bitSet(this->_exePORTUp[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going up");
         return true;
@@ -169,9 +171,12 @@ namespace ArduinoMatrixCharlieplex {
         //        digitalWrite(pin, LOW);
         BitMan* bm = _getBitMan(pin);
         //this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
-        bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
-        bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
-        bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
+        //bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
+        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
+        //bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
+        bitClear(this->_exePORTUp[bm->y], bm->x);
+        bitSet(this->_exeDDRUp[bm->y], bm->x);
+        bitClear(this->_exePORTDn[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going down");
         return true;
@@ -181,10 +186,14 @@ namespace ArduinoMatrixCharlieplex {
         //        pinMode(pin, INPUT);
         //        digitalWrite(pin, LOW);
         BitMan* bm = _getBitMan(pin);
-        bitWrite(this->_exeDDRUp[bm->y], bm->x, 0);
-        bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
-        bitWrite(this->_exeDDRDn[bm->y], bm->x, 0);
-        bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
+        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 0);
+        //bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
+        //bitWrite(this->_exeDDRDn[bm->y], bm->x, 0);
+        //bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
+        bitClear(this->_exeDDRUp[bm->y], bm->x);
+        bitClear(this->_exePORTUp[bm->y], bm->x);
+        bitClear(this->_exeDDRDn[bm->y], bm->x);
+        bitClear(this->_exePORTDn[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going sink");
         return true;
@@ -227,7 +236,7 @@ namespace ArduinoMatrixCharlieplex {
             this->_activeNode->gnd = pin->gnd;
             this->_state = MXCHARLIE_ACTIVE;
             //return true;
-            return _execute(true);
+            return _execute();
         } else { //The objective is to check the given Node doesn't get conflict
             uint8_t _chkMatch = 0; // Whether the given node is the ActiveNode
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
@@ -253,7 +262,7 @@ namespace ArduinoMatrixCharlieplex {
                 _sinkPin(pin->vcc);
                 _sinkPin(pin->gnd);
                 //return true;
-                return _execute(true);
+                return _execute();
             } else if (0b11 & _chkConflict) { // If any conflict happens
                 return false;
             } else if (0b11 == _chkMatch) { // Exact match to ActiveNode
@@ -263,7 +272,7 @@ namespace ArduinoMatrixCharlieplex {
                 this->_activeNode->gnd = 0;
                 this->_state = MXCHARLIE_INACTIVE;
                 //return true;
-                return _execute(true);
+                return _execute();
             }
             return false;
         }
