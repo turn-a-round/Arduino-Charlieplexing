@@ -1,0 +1,28 @@
+#######################################
+# Syntax Coloring Map For Esplora
+####################################### 
+# Class
+#######################################
+
+ArduinoMatrixCharlieplex	KEYWORD1	MatrixCharlieplexNamespace
+MatrixCharlieplex	KEYWORD1	MatrixCharlieplexLibrary
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+TurnOn	KEYWORD2
+TurnOff	KEYWORD2
+Clear	KEYWORD2
+Reset	KEYWORD2
+
+#######################################
+# Constants
+#######################################
+ 
+MXCHARLIE_ACTIVE	LITERAL1
+MXCHARLIE_INACTIVE	LITERAL1
+MXCHARLIE_CA	LITERAL1
+MXCHARLIE_CC	LITERAL1
+MXCHARLIE_UPMASK	LITERAL1
+
