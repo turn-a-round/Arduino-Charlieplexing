@@ -98,23 +98,23 @@ void blink(){
 //  //    mch.Clear();
 //    }
     //mch.TurnOn(i+1, j+1);
+    //increase2();
 //    Serial.print("i:\t");
 //    Serial.println(i);
 //    Serial.print("Node:\t");
 //    Serial.println(i+1);
     mch.TurnOn(i+1);
-    //increase();
-    increase2();
+    increase();
     busy = false;
   }
 }
 
 void increase(){
-  j = ++j % 4;
-  if(j == 0) i = (++i % 5);
+  i = (++i % 4);
 }
 
 void increase2(){
-  i = (++i % 4);
+  j = ++j % 4;
+  if(j == 0) i = (++i % 5);
 }
 
