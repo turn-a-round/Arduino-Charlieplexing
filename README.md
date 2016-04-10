@@ -28,4 +28,4 @@ e.g. Cathode Connection for a 5 pin setup
     S  4 -> 1 2 3 5
        5 -> 1 2 3 4
 
-Copy the Arduino-Charlieplexing folder inside libraries to your own arduino-ide>libraries folder to use this library.
+Copy the Arduino-Charlieplexing folder inside libraries to your own arduino-ide --> libraries folder to use this library.
