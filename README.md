@@ -3,6 +3,7 @@ A library for Arduino to control Charlieplexed LED matrices
 
 Drive (N * (N-1)) number of "Charlieplxed" diode matrices
 (e.g. LED Matrix) with N number of outputs capable of tri-state.
+The LED Matrix design is inspired from http://wealoneonearth.blogspot.com/2013/03/design-note-charlieplexing-led-matrices.html
 
            C A T H O D E
            1 2 3 4 5 . N

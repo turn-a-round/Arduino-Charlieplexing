@@ -37,7 +37,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(millis() > (time+100)){
+  if(millis() - time > 100)){
     time=millis();
     blink();
 //    count++;
