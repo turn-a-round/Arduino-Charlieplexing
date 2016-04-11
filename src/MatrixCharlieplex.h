@@ -53,14 +53,14 @@ namespace ArduinoMatrixCharlieplex {
     public:
         //MatrixCharlieplex();
         MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType);
-        //DiodeNode* GetActiveNode();
-        //uint8_t* GetPins();
-        boolean TurnOn(uint8_t row, uint8_t col);
-        boolean TurnOff(uint8_t row, uint8_t col);
-        boolean TurnOn(uint16_t index);
-        boolean TurnOff(uint16_t index);
-        boolean Clear();
-        boolean Reset();
+        //DiodeNode* getActiveNode();
+        //uint8_t* getPins();
+        boolean turnOn(uint8_t row, uint8_t col);
+        boolean turnOff(uint8_t row, uint8_t col);
+        boolean turnOn(uint16_t index);
+        boolean turnOff(uint16_t index);
+        boolean clear();
+        boolean reset();
 
     private:
         uint8_t _exeDDRUp[2];

@@ -239,27 +239,27 @@ namespace ArduinoMatrixCharlieplex {
 #pragma endregion Private Functions
 
 #pragma region Public Functions
-    boolean MatrixCharlieplex::TurnOn(uint8_t row, uint8_t col) {
+    boolean MatrixCharlieplex::turnOn(uint8_t row, uint8_t col) {
         return _setNode(_getNode(row, col), HIGH);
     }
 
-    boolean MatrixCharlieplex::TurnOff(uint8_t row, uint8_t col) {
+    boolean MatrixCharlieplex::turnOff(uint8_t row, uint8_t col) {
         return _setNode(_getNode(row, col), LOW);
     }
 
-    boolean MatrixCharlieplex::TurnOn(uint16_t index) {
+    boolean MatrixCharlieplex::turnOn(uint16_t index) {
         return _setNode(_getNode(index), HIGH);
     }
 
-    boolean MatrixCharlieplex::TurnOff(uint16_t index) {
+    boolean MatrixCharlieplex::turnOff(uint16_t index) {
         return _setNode(_getNode(index), LOW);
     }
 
-    boolean MatrixCharlieplex::Clear() {
+    boolean MatrixCharlieplex::clear() {
         return ((this->_state == MXCHARLIE_INACTIVE) ? true : _setNode(this->_activeNode, LOW));
     }
 
-    boolean MatrixCharlieplex::Reset() {
+    boolean MatrixCharlieplex::reset() {
         _init(false);
         return true;
     }
