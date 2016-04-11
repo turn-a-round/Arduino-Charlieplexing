@@ -42,19 +42,19 @@ void loop() {
     blink();
 //    count++;
 //    if(count > 1000)
-//      mch.Reset();
+//      mch.reset();
   }
 //  Serial.print(i);
 //  Serial.print("-");
 //  Serial.println(j);
 //  for(int i=1; i<=5; i++){
 //    for(int j=1; j<5; j++){
-//      mch.TurnOn(i, j);
-////      node=mch.GetActiveNode();
+//      mch.turnOn(i, j);
+////      node=mch.getActiveNode();
 ////      Serial.println(node->vcc);
 ////      Serial.println(node->gnd);
 ////      if(c%5==0){
-////        Pins2 = mch.GetPins();
+////        Pins2 = mch.getPins();
 ////        for(int x=0;x<5;x++){
 ////          Serial.print(*(Pins2+x));
 ////          Serial.print("-");
@@ -79,31 +79,31 @@ void blink(){
   if(!busy){
     busy = true;
 //  //if((j == 2 || j == 3) && (i == 2 || i == 3))
-//  mch.TurnOn(i+1, j+1);
+//  mch.turnOn(i+1, j+1);
 //  //else
-//  //mch.Clear();
+//  //mch.clear();
 //  j = ++j % 4;
 //  if(j == 0) i = (++i % 5);
 //    while(true){
 //      if(letter[i] & (0b1<<(3-j))){
 //        if(count == 0)
-//          mch.Clear();
+//          mch.clear();
 //        count = ++count % 20;
-//      mch.TurnOn(i+1, j+1);
+//      mch.turnOn(i+1, j+1);
 //      increase();
 //      break;
 //      }
 //      increase();
 //  //    else
-//  //    mch.Clear();
+//  //    mch.clear();
 //    }
-    //mch.TurnOn(i+1, j+1);
+    //mch.turnOn(i+1, j+1);
     //increase2();
 //    Serial.print("i:\t");
 //    Serial.println(i);
 //    Serial.print("Node:\t");
 //    Serial.println(i+1);
-    mch.TurnOn(i+1);
+    mch.turnOn(i+1);
     increase();
     busy = false;
   }
