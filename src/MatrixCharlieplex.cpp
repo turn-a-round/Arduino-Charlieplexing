@@ -52,12 +52,12 @@ namespace ArduinoMatrixCharlieplex {
     //}
 
     MatrixCharlieplex::MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType) {
-        this->_pins = pins;
-        this->_commonType = commonType;
-        this->_noOfPins = noOfPins; //sizeof (pins) / sizeof (uint8_t);
-        this->_maxNode = this->_noOfPins * (this->_noOfPins - 1);
-        this->_activeNode = new DiodeNode();
-        this->_init(true);
+        _pins = pins;
+        _commonType = commonType;
+        _noOfPins = noOfPins; //sizeof (pins) / sizeof (uint8_t);
+        _maxNode = _noOfPins * (_noOfPins - 1);
+        _activeNode = new DiodeNode();
+        _init(true);
     }
 #pragma endregion Constructor
 
@@ -65,72 +65,72 @@ namespace ArduinoMatrixCharlieplex {
 
     void MatrixCharlieplex::_init(boolean isStart) {
         // Sink all output pins
-        this->_activeNode->vcc = 0;
-        this->_activeNode->gnd = 0;
-        this->_state = MXCHARLIE_INACTIVE;
+        _activeNode->vcc = 0;
+        _activeNode->gnd = 0;
+        _state = MXCHARLIE_INACTIVE;
         if (isStart) {
-            //this->_exeDDRDn = {0b11111110, 0b00111111};
-            //this->_exeDDRUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
-            //this->_exePORTDn = {0b11111110, 0b00111111};
-            //this->_exePORTUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
-            this->_exeDDRDn[0] = 0b11111111;
-            this->_exeDDRDn[1] = 0b00111111;
-            this->_exeDDRUp[0] = MXCHARLIE_UPMASK;
-            this->_exeDDRUp[1] = MXCHARLIE_UPMASK;
-            this->_exePORTDn[0] = 0b11111111;
-            this->_exePORTDn[1] = 0b00111111;
-            this->_exePORTUp[0] = MXCHARLIE_UPMASK;
-            this->_exePORTUp[1] = MXCHARLIE_UPMASK;
+            //_exeDDRDn = {0b11111110, 0b00111111};
+            //_exeDDRUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+            //_exePORTDn = {0b11111110, 0b00111111};
+            //_exePORTUp = {MXCHARLIE_UPMASK, MXCHARLIE_UPMASK};
+            _exeDDRDn[0] = 0b11111111;
+            _exeDDRDn[1] = 0b00111111;
+            _exeDDRUp[0] = MXCHARLIE_UPMASK;
+            _exeDDRUp[1] = MXCHARLIE_UPMASK;
+            _exePORTDn[0] = 0b11111111;
+            _exePORTDn[1] = 0b00111111;
+            _exePORTUp[0] = MXCHARLIE_UPMASK;
+            _exePORTUp[1] = MXCHARLIE_UPMASK;
             //for (uint8_t i = 0; i < 5; i++) {
-            for (uint8_t i = 0; i < this->_noOfPins; i++) {
-                _sinkPin(*(this->_pins + i));
+            for (uint8_t i = 0; i < _noOfPins; i++) {
+                _sinkPin(*(_pins + i));
             }
-            this->_ioDDR[0] = this->_exeDDRDn[0];
-            this->_ioDDR[1] = this->_exeDDRDn[1];
-            this->_ioPORT[0] = this->_exePORTDn[0];
-            this->_ioPORT[1] = this->_exePORTDn[1];
+            _ioDDR[0] = _exeDDRDn[0];
+            _ioDDR[1] = _exeDDRDn[1];
+            _ioPORT[0] = _exePORTDn[0];
+            _ioPORT[1] = _exePORTDn[1];
         }
         _reset();
     }
 
 //    void MatrixCharlieplex::_print() {
 //        Serial.println("Status:-");
-//        Serial.print("this->ioDDR[0]: ");
-//        Serial.println(this->_ioDDR[0], BIN);
-//        Serial.print("this->ioDDR[1]: ");
-//        Serial.println(this->_ioDDR[1], BIN);
-//        Serial.print("this->_ioPORT[0]: ");
-//        Serial.println(this->_ioPORT[0], BIN);
-//        Serial.print("this->_ioPORT[1]: ");
-//        Serial.println(this->_ioPORT[1], BIN);
-//        Serial.print("this->_exeDDRDn[0]: ");
-//        Serial.println(this->_exeDDRDn[0], BIN);
-//        Serial.print("this->_exeDDRDn[1]: ");
-//        Serial.println(this->_exeDDRDn[1], BIN);
-//        Serial.print("this->_exeDDRUp[0]: ");
-//        Serial.println(this->_exeDDRUp[0], BIN);
-//        Serial.print("this->_exeDDRUp[1]: ");
-//        Serial.println(this->_exeDDRUp[1], BIN);
-//        Serial.print("this->_exePORTDn[0]: ");
-//        Serial.println(this->_exePORTDn[0], BIN);
-//        Serial.print("this->_exePORTDn[1]: ");
-//        Serial.println(this->_exePORTDn[1], BIN);
-//        Serial.print("this->_exePORTUp[0]: ");
-//        Serial.println(this->_exePORTUp[0], BIN);
-//        Serial.print("this->_exePORTUp[1]: ");
-//        Serial.println(this->_exePORTUp[1], BIN);
+//        Serial.print("ioDDR[0]: ");
+//        Serial.println(_ioDDR[0], BIN);
+//        Serial.print("ioDDR[1]: ");
+//        Serial.println(_ioDDR[1], BIN);
+//        Serial.print("_ioPORT[0]: ");
+//        Serial.println(_ioPORT[0], BIN);
+//        Serial.print("_ioPORT[1]: ");
+//        Serial.println(_ioPORT[1], BIN);
+//        Serial.print("_exeDDRDn[0]: ");
+//        Serial.println(_exeDDRDn[0], BIN);
+//        Serial.print("_exeDDRDn[1]: ");
+//        Serial.println(_exeDDRDn[1], BIN);
+//        Serial.print("_exeDDRUp[0]: ");
+//        Serial.println(_exeDDRUp[0], BIN);
+//        Serial.print("_exeDDRUp[1]: ");
+//        Serial.println(_exeDDRUp[1], BIN);
+//        Serial.print("_exePORTDn[0]: ");
+//        Serial.println(_exePORTDn[0], BIN);
+//        Serial.print("_exePORTDn[1]: ");
+//        Serial.println(_exePORTDn[1], BIN);
+//        Serial.print("_exePORTUp[0]: ");
+//        Serial.println(_exePORTUp[0], BIN);
+//        Serial.print("_exePORTUp[1]: ");
+//        Serial.println(_exePORTUp[1], BIN);
 //        Serial.println("----------");
 //    }
 
     boolean MatrixCharlieplex::_reset() {
-        this->_exeDDRDn[0] = this->_ioDDR[0];
-        this->_exeDDRDn[1] = this->_ioDDR[1];
-        this->_exeDDRUp[0] = MXCHARLIE_UPMASK;
-        this->_exeDDRUp[1] = MXCHARLIE_UPMASK;
-        this->_exePORTDn[0] = this->_ioPORT[0];
-        this->_exePORTDn[1] = this->_ioPORT[1];
-        this->_exePORTUp[0] = MXCHARLIE_UPMASK;
-        this->_exePORTUp[1] = MXCHARLIE_UPMASK;
+        _exeDDRDn[0] = _ioDDR[0];
+        _exeDDRDn[1] = _ioDDR[1];
+        _exeDDRUp[0] = MXCHARLIE_UPMASK;
+        _exeDDRUp[1] = MXCHARLIE_UPMASK;
+        _exePORTDn[0] = _ioPORT[0];
+        _exePORTDn[1] = _ioPORT[1];
+        _exePORTUp[0] = MXCHARLIE_UPMASK;
+        _exePORTUp[1] = MXCHARLIE_UPMASK;
         return _execute();
     }
 
@@ -138,15 +138,15 @@ namespace ArduinoMatrixCharlieplex {
         //_print();
 //        if (needClearance) {
 //            // Clear all previous setup
-//            DDRD = DDRD & this->_ioDDR[0];
-//            DDRB = DDRB & this->_ioDDR[1];
-//            PORTD = PORTD & this->_ioPORT[0];
-//            PORTB = PORTB & this->_ioPORT[1];
+//            DDRD = DDRD & _ioDDR[0];
+//            DDRB = DDRB & _ioDDR[1];
+//            PORTD = PORTD & _ioPORT[0];
+//            PORTB = PORTB & _ioPORT[1];
 //        }
-        DDRD = DDRD & this->_exeDDRDn[0] | this->_exeDDRUp[0];
-        DDRB = DDRB & this->_exeDDRDn[1] | this->_exeDDRUp[1];
-        PORTD = PORTD & this->_exePORTDn[0] | this->_exePORTUp[0];
-        PORTB = PORTB & this->_exePORTDn[1] | this->_exePORTUp[1];
+        DDRD = DDRD & _exeDDRDn[0] | _exeDDRUp[0];
+        DDRB = DDRB & _exeDDRDn[1] | _exeDDRUp[1];
+        PORTD = PORTD & _exePORTDn[0] | _exePORTUp[0];
+        PORTB = PORTB & _exePORTDn[1] | _exePORTUp[1];
         return true;
     }
 
@@ -156,12 +156,12 @@ namespace ArduinoMatrixCharlieplex {
         //        pinMode(pin, OUTPUT);
         //        digitalWrite(pin, HIGH);
         BitMan* bm = _getBitMan(pin);
-        //this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
-        //this->_exePORTUp[bm->y] |= 0b1 << bm->x;
-        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
-        //bitWrite(this->_exePORTUp[bm->y], bm->x, 1);
-        bitSet(this->_exeDDRUp[bm->y], bm->x);
-        bitSet(this->_exePORTUp[bm->y], bm->x);
+        //_exeDDRUp[bm->y] |= 0b1 << bm->x;
+        //_exePORTUp[bm->y] |= 0b1 << bm->x;
+        //bitWrite(_exeDDRUp[bm->y], bm->x, 1);
+        //bitWrite(_exePORTUp[bm->y], bm->x, 1);
+        bitSet(_exeDDRUp[bm->y], bm->x);
+        bitSet(_exePORTUp[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going up");
         return true;
@@ -171,13 +171,13 @@ namespace ArduinoMatrixCharlieplex {
         //        pinMode(pin, OUTPUT);
         //        digitalWrite(pin, LOW);
         BitMan* bm = _getBitMan(pin);
-        //this->_exeDDRUp[bm->y] |= 0b1 << bm->x;
-        //bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
-        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 1);
-        //bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
-        bitClear(this->_exePORTUp[bm->y], bm->x);
-        bitSet(this->_exeDDRUp[bm->y], bm->x);
-        bitClear(this->_exePORTDn[bm->y], bm->x);
+        //_exeDDRUp[bm->y] |= 0b1 << bm->x;
+        //bitWrite(_exePORTUp[bm->y], bm->x, 0);
+        //bitWrite(_exeDDRUp[bm->y], bm->x, 1);
+        //bitWrite(_exePORTDn[bm->y], bm->x, 0);
+        bitClear(_exePORTUp[bm->y], bm->x);
+        bitSet(_exeDDRUp[bm->y], bm->x);
+        bitClear(_exePORTDn[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going down");
         return true;
@@ -187,14 +187,14 @@ namespace ArduinoMatrixCharlieplex {
         //        pinMode(pin, INPUT);
         //        digitalWrite(pin, LOW);
         BitMan* bm = _getBitMan(pin);
-        //bitWrite(this->_exeDDRUp[bm->y], bm->x, 0);
-        //bitWrite(this->_exePORTUp[bm->y], bm->x, 0);
-        //bitWrite(this->_exeDDRDn[bm->y], bm->x, 0);
-        //bitWrite(this->_exePORTDn[bm->y], bm->x, 0);
-        bitClear(this->_exeDDRUp[bm->y], bm->x);
-        bitClear(this->_exePORTUp[bm->y], bm->x);
-        bitClear(this->_exeDDRDn[bm->y], bm->x);
-        bitClear(this->_exePORTDn[bm->y], bm->x);
+        //bitWrite(_exeDDRUp[bm->y], bm->x, 0);
+        //bitWrite(_exePORTUp[bm->y], bm->x, 0);
+        //bitWrite(_exeDDRDn[bm->y], bm->x, 0);
+        //bitWrite(_exePORTDn[bm->y], bm->x, 0);
+        bitClear(_exeDDRUp[bm->y], bm->x);
+        bitClear(_exePORTUp[bm->y], bm->x);
+        bitClear(_exeDDRDn[bm->y], bm->x);
+        bitClear(_exePORTDn[bm->y], bm->x);
         //Serial.print(pin);
         //Serial.println("-going sink");
         return true;
@@ -204,24 +204,24 @@ namespace ArduinoMatrixCharlieplex {
         if (state) {
             uint8_t _chkMatch = 0;
 
-            if (this->_activeNode->vcc == pin->vcc) {
+            if (_activeNode->vcc == pin->vcc) {
                 _chkMatch |= 0b10;
-            } else if (this->_activeNode->vcc == pin->gnd) {
+            } else if (_activeNode->vcc == pin->gnd) {
                 _downPin(pin->gnd);
                 _chkMatch |= 0b01;
             } else {
-                if (this->_state)
-                    _sinkPin(this->_activeNode->vcc);
+                if (_state)
+                    _sinkPin(_activeNode->vcc);
             }
 
-            if (this->_activeNode->gnd == pin->vcc) {
+            if (_activeNode->gnd == pin->vcc) {
                 _upPin(pin->vcc);
                 _chkMatch |= 0b10;
-            } else if (this->_activeNode->gnd == pin->gnd) {
+            } else if (_activeNode->gnd == pin->gnd) {
                 _chkMatch |= 0b01;
             } else {
-                if (this->_state)
-                    _sinkPin(this->_activeNode->gnd);
+                if (_state)
+                    _sinkPin(_activeNode->gnd);
             }
 
             // Now Set the requested pin's state
@@ -233,9 +233,9 @@ namespace ArduinoMatrixCharlieplex {
             if ((0b01 & _chkMatch) != 0b01) {
                 _downPin(pin->gnd);
             }
-            this->_activeNode->vcc = pin->vcc;
-            this->_activeNode->gnd = pin->gnd;
-            this->_state = MXCHARLIE_ACTIVE;
+            _activeNode->vcc = pin->vcc;
+            _activeNode->gnd = pin->gnd;
+            _state = MXCHARLIE_ACTIVE;
             //return true;
             return _execute();
         } else { //The objective is to check the given Node doesn't get conflict
@@ -243,17 +243,17 @@ namespace ArduinoMatrixCharlieplex {
             uint8_t _chkConflict = 0; // Whether it conflicts with ActiveNode
             uint8_t _chkClear = 0; // Whether it doesn't conflict with ActiveNode
 
-            if (this->_activeNode->vcc == pin->vcc) {
+            if (_activeNode->vcc == pin->vcc) {
                 _chkMatch = (_chkMatch << 1) | 1;
-            } else if (this->_activeNode->vcc == pin->gnd) {
+            } else if (_activeNode->vcc == pin->gnd) {
                 _chkConflict = (_chkConflict << 1) | 1;
             } else {
                 _chkClear = (_chkClear << 1) | 1;
             }
 
-            if (this->_activeNode->gnd == pin->vcc) {
+            if (_activeNode->gnd == pin->vcc) {
                 _chkConflict = (_chkConflict << 1) | 1;
-            } else if (this->_activeNode->gnd == pin->gnd) {
+            } else if (_activeNode->gnd == pin->gnd) {
                 _chkMatch = (_chkMatch << 1) | 1;
             } else {
                 _chkClear = (_chkClear << 1) | 1;
@@ -269,9 +269,9 @@ namespace ArduinoMatrixCharlieplex {
             } else if (0b11 == _chkMatch) { // Exact match to ActiveNode
                 _sinkPin(pin->vcc);
                 _sinkPin(pin->gnd);
-                this->_activeNode->vcc = 0;
-                this->_activeNode->gnd = 0;
-                this->_state = MXCHARLIE_INACTIVE;
+                _activeNode->vcc = 0;
+                _activeNode->gnd = 0;
+                _state = MXCHARLIE_INACTIVE;
                 //return true;
                 return _execute();
             }
@@ -294,11 +294,11 @@ namespace ArduinoMatrixCharlieplex {
          *            Row: 1 | 2 | 3 | 4 | 5
          *         Column: 1 | 2 | 3 | 4 | 5
          */
-        //node->vcc = *(this->_pins + (row - 1)); // same as row number
-        //node->gnd = *(this->_pins + ((col < row) ? (col - 1) : col)); // complicated
-        uint8_t x = *(this->_pins + (row - 1));
-        uint8_t y = *(this->_pins + ((col < row) ? (col - 1) : col));
-        if (this->_commonType) {
+        //node->vcc = *(_pins + (row - 1)); // same as row number
+        //node->gnd = *(_pins + ((col < row) ? (col - 1) : col)); // complicated
+        uint8_t x = *(_pins + (row - 1));
+        uint8_t y = *(_pins + ((col < row) ? (col - 1) : col));
+        if (_commonType) {
             node->vcc = x; // same as row number
             node->gnd = y; // complicated
         } else { // just reverse
@@ -313,13 +313,13 @@ namespace ArduinoMatrixCharlieplex {
         /* This one is also calculated based on 0-based indexing like the above
          * one.
          */
-        uint8_t row = (index - 1) / (this->_noOfPins - 1);
-        uint8_t col = (index - 1) % (this->_noOfPins - 1);
-        //node->vcc = *(this->_pins + row);
-        //node->gnd = *(this->_pins + ((col < row) ? col : (col + 1)));
-        uint8_t x = *(this->_pins + row);
-        uint8_t y = *(this->_pins + ((col < row) ? col : (col + 1)));
-        if (this->_commonType) {
+        uint8_t row = (index - 1) / (_noOfPins - 1);
+        uint8_t col = (index - 1) % (_noOfPins - 1);
+        //node->vcc = *(_pins + row);
+        //node->gnd = *(_pins + ((col < row) ? col : (col + 1)));
+        uint8_t x = *(_pins + row);
+        uint8_t y = *(_pins + ((col < row) ? col : (col + 1)));
+        if (_commonType) {
             node->vcc = x; // same as row number
             node->gnd = y; // again complicated
         } else { // just reverse
@@ -340,11 +340,11 @@ namespace ArduinoMatrixCharlieplex {
 #pragma region Public Functions
 
 //    DiodeNode* MatrixCharlieplex::getActiveNode() {
-//        return this->_activeNode;
+//        return _activeNode;
 //    }
 //
 //    uint8_t* MatrixCharlieplex::getPins() {
-//        return this->_pins;
+//        return _pins;
 //    }
 
     boolean MatrixCharlieplex::turnOn(uint8_t row, uint8_t col) {
@@ -364,11 +364,11 @@ namespace ArduinoMatrixCharlieplex {
     }
 
     boolean MatrixCharlieplex::clear() {
-        return ((this->_state == MXCHARLIE_INACTIVE) ? true : _setNode(this->_activeNode, LOW));
+        return ((_state == MXCHARLIE_INACTIVE) ? true : _setNode(_activeNode, LOW));
     }
 
     boolean MatrixCharlieplex::reset() {
-        //if (_setNode(this->_activeNode, LOW))
+        //if (_setNode(_activeNode, LOW))
         //    return _init(false);
         //return false;
         _init(false);

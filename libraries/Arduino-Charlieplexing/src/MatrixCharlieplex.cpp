@@ -48,81 +48,81 @@
 namespace ArduinoMatrixCharlieplex {
 #pragma region Constructor
     MatrixCharlieplex::MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType) {
-        this->_pins = pins;
-        this->_commonType = commonType;
-        this->_noOfPins = noOfPins;
-        this->_maxNode = this->_noOfPins * (this->_noOfPins - 1);
-        this->_activeNode = new DiodeNode();
-        this->_init(true);
+        _pins = pins;
+        _commonType = commonType;
+        _noOfPins = noOfPins;
+        _maxNode = _noOfPins * (_noOfPins - 1);
+        _activeNode = new DiodeNode();
+        _init(true);
     }
 #pragma endregion Constructor
 
 #pragma region Private Functions
     void MatrixCharlieplex::_init(boolean isStart) {
-        this->_activeNode->vcc = 0;
-        this->_activeNode->gnd = 0;
-        this->_state = MXCHARLIE_INACTIVE;
+        _activeNode->vcc = 0;
+        _activeNode->gnd = 0;
+        _state = MXCHARLIE_INACTIVE;
         if (isStart) {
-            this->_exeDDRDn[0] = 0b11111111;
-            this->_exeDDRDn[1] = 0b00111111;
-            this->_exeDDRUp[0] = MXCHARLIE_UPMASK;
-            this->_exeDDRUp[1] = MXCHARLIE_UPMASK;
-            this->_exePORTDn[0] = 0b11111111;
-            this->_exePORTDn[1] = 0b00111111;
-            this->_exePORTUp[0] = MXCHARLIE_UPMASK;
-            this->_exePORTUp[1] = MXCHARLIE_UPMASK;
-            for (uint8_t i = 0; i < this->_noOfPins; i++) {
-                _sinkPin(*(this->_pins + i));
+            _exeDDRDn[0] = 0b11111111;
+            _exeDDRDn[1] = 0b00111111;
+            _exeDDRUp[0] = MXCHARLIE_UPMASK;
+            _exeDDRUp[1] = MXCHARLIE_UPMASK;
+            _exePORTDn[0] = 0b11111111;
+            _exePORTDn[1] = 0b00111111;
+            _exePORTUp[0] = MXCHARLIE_UPMASK;
+            _exePORTUp[1] = MXCHARLIE_UPMASK;
+            for (uint8_t i = 0; i < _noOfPins; i++) {
+                _sinkPin(*(_pins + i));
             }
-            this->_ioDDR[0] = this->_exeDDRDn[0];
-            this->_ioDDR[1] = this->_exeDDRDn[1];
-            this->_ioPORT[0] = this->_exePORTDn[0];
-            this->_ioPORT[1] = this->_exePORTDn[1];
+            _ioDDR[0] = _exeDDRDn[0];
+            _ioDDR[1] = _exeDDRDn[1];
+            _ioPORT[0] = _exePORTDn[0];
+            _ioPORT[1] = _exePORTDn[1];
         }
         _reset();
     }
 
     boolean MatrixCharlieplex::_reset() {
-        this->_exeDDRDn[0] = this->_ioDDR[0];
-        this->_exeDDRDn[1] = this->_ioDDR[1];
-        this->_exeDDRUp[0] = MXCHARLIE_UPMASK;
-        this->_exeDDRUp[1] = MXCHARLIE_UPMASK;
-        this->_exePORTDn[0] = this->_ioPORT[0];
-        this->_exePORTDn[1] = this->_ioPORT[1];
-        this->_exePORTUp[0] = MXCHARLIE_UPMASK;
-        this->_exePORTUp[1] = MXCHARLIE_UPMASK;
+        _exeDDRDn[0] = _ioDDR[0];
+        _exeDDRDn[1] = _ioDDR[1];
+        _exeDDRUp[0] = MXCHARLIE_UPMASK;
+        _exeDDRUp[1] = MXCHARLIE_UPMASK;
+        _exePORTDn[0] = _ioPORT[0];
+        _exePORTDn[1] = _ioPORT[1];
+        _exePORTUp[0] = MXCHARLIE_UPMASK;
+        _exePORTUp[1] = MXCHARLIE_UPMASK;
         return _execute();
     }
 
     boolean MatrixCharlieplex::_execute() {
-        DDRD = DDRD & this->_exeDDRDn[0] | this->_exeDDRUp[0];
-        DDRB = DDRB & this->_exeDDRDn[1] | this->_exeDDRUp[1];
-        PORTD = PORTD & this->_exePORTDn[0] | this->_exePORTUp[0];
-        PORTB = PORTB & this->_exePORTDn[1] | this->_exePORTUp[1];
+        DDRD = DDRD & _exeDDRDn[0] | _exeDDRUp[0];
+        DDRB = DDRB & _exeDDRDn[1] | _exeDDRUp[1];
+        PORTD = PORTD & _exePORTDn[0] | _exePORTUp[0];
+        PORTB = PORTB & _exePORTDn[1] | _exePORTUp[1];
         return true;
     }
 
     boolean MatrixCharlieplex::_upPin(uint8_t pin) {
         BitMan* bm = _getBitMan(pin);
-        bitSet(this->_exeDDRUp[bm->y], bm->x);
-        bitSet(this->_exePORTUp[bm->y], bm->x);
+        bitSet(_exeDDRUp[bm->y], bm->x);
+        bitSet(_exePORTUp[bm->y], bm->x);
         return true;
     }
 
     boolean MatrixCharlieplex::_downPin(uint8_t pin) {
         BitMan* bm = _getBitMan(pin);
-        bitClear(this->_exePORTUp[bm->y], bm->x);
-        bitSet(this->_exeDDRUp[bm->y], bm->x);
-        bitClear(this->_exePORTDn[bm->y], bm->x);
+        bitClear(_exePORTUp[bm->y], bm->x);
+        bitSet(_exeDDRUp[bm->y], bm->x);
+        bitClear(_exePORTDn[bm->y], bm->x);
         return true;
     }
 
     boolean MatrixCharlieplex::_sinkPin(uint8_t pin) {
         BitMan* bm = _getBitMan(pin);
-        bitClear(this->_exeDDRUp[bm->y], bm->x);
-        bitClear(this->_exePORTUp[bm->y], bm->x);
-        bitClear(this->_exeDDRDn[bm->y], bm->x);
-        bitClear(this->_exePORTDn[bm->y], bm->x);
+        bitClear(_exeDDRUp[bm->y], bm->x);
+        bitClear(_exePORTUp[bm->y], bm->x);
+        bitClear(_exeDDRDn[bm->y], bm->x);
+        bitClear(_exePORTDn[bm->y], bm->x);
         return true;
     }
 
@@ -130,24 +130,24 @@ namespace ArduinoMatrixCharlieplex {
         if (state) {
             uint8_t _chkMatch = 0;
 
-            if (this->_activeNode->vcc == pin->vcc) {
+            if (_activeNode->vcc == pin->vcc) {
                 _chkMatch |= 0b10;
-            } else if (this->_activeNode->vcc == pin->gnd) {
+            } else if (_activeNode->vcc == pin->gnd) {
                 _downPin(pin->gnd);
                 _chkMatch |= 0b01;
             } else {
-                if (this->_state)
-                    _sinkPin(this->_activeNode->vcc);
+                if (_state)
+                    _sinkPin(_activeNode->vcc);
             }
 
-            if (this->_activeNode->gnd == pin->vcc) {
+            if (_activeNode->gnd == pin->vcc) {
                 _upPin(pin->vcc);
                 _chkMatch |= 0b10;
-            } else if (this->_activeNode->gnd == pin->gnd) {
+            } else if (_activeNode->gnd == pin->gnd) {
                 _chkMatch |= 0b01;
             } else {
-                if (this->_state)
-                    _sinkPin(this->_activeNode->gnd);
+                if (_state)
+                    _sinkPin(_activeNode->gnd);
             }
 
             if ((0b10 & _chkMatch) != 0b10) {
@@ -156,26 +156,26 @@ namespace ArduinoMatrixCharlieplex {
             if ((0b01 & _chkMatch) != 0b01) {
                 _downPin(pin->gnd);
             }
-            this->_activeNode->vcc = pin->vcc;
-            this->_activeNode->gnd = pin->gnd;
-            this->_state = MXCHARLIE_ACTIVE;
+            _activeNode->vcc = pin->vcc;
+            _activeNode->gnd = pin->gnd;
+            _state = MXCHARLIE_ACTIVE;
             return _execute();
         } else {
             uint8_t _chkMatch = 0;
             uint8_t _chkConflict = 0;
             uint8_t _chkClear = 0;
 
-            if (this->_activeNode->vcc == pin->vcc) {
+            if (_activeNode->vcc == pin->vcc) {
                 _chkMatch = (_chkMatch << 1) | 1;
-            } else if (this->_activeNode->vcc == pin->gnd) {
+            } else if (_activeNode->vcc == pin->gnd) {
                 _chkConflict = (_chkConflict << 1) | 1;
             } else {
                 _chkClear = (_chkClear << 1) | 1;
             }
 
-            if (this->_activeNode->gnd == pin->vcc) {
+            if (_activeNode->gnd == pin->vcc) {
                 _chkConflict = (_chkConflict << 1) | 1;
-            } else if (this->_activeNode->gnd == pin->gnd) {
+            } else if (_activeNode->gnd == pin->gnd) {
                 _chkMatch = (_chkMatch << 1) | 1;
             } else {
                 _chkClear = (_chkClear << 1) | 1;
@@ -190,9 +190,9 @@ namespace ArduinoMatrixCharlieplex {
             } else if (0b11 == _chkMatch) {
                 _sinkPin(pin->vcc);
                 _sinkPin(pin->gnd);
-                this->_activeNode->vcc = 0;
-                this->_activeNode->gnd = 0;
-                this->_state = MXCHARLIE_INACTIVE;
+                _activeNode->vcc = 0;
+                _activeNode->gnd = 0;
+                _state = MXCHARLIE_INACTIVE;
                 return _execute();
             }
             return false;
@@ -202,9 +202,9 @@ namespace ArduinoMatrixCharlieplex {
 
     DiodeNode* MatrixCharlieplex::_getNode(uint8_t row, uint8_t col) {
         DiodeNode* node = new DiodeNode();
-        uint8_t x = *(this->_pins + (row - 1));
-        uint8_t y = *(this->_pins + ((col < row) ? (col - 1) : col));
-        if (this->_commonType) {
+        uint8_t x = *(_pins + (row - 1));
+        uint8_t y = *(_pins + ((col < row) ? (col - 1) : col));
+        if (_commonType) {
             node->vcc = x;
             node->gnd = y;
         } else {
@@ -216,11 +216,11 @@ namespace ArduinoMatrixCharlieplex {
 
     DiodeNode* MatrixCharlieplex::_getNode(uint16_t index) {
         DiodeNode* node = new DiodeNode();
-        uint8_t row = (index - 1) / (this->_noOfPins - 1);
-        uint8_t col = (index - 1) % (this->_noOfPins - 1);
-        uint8_t x = *(this->_pins + row);
-        uint8_t y = *(this->_pins + ((col < row) ? col : (col + 1)));
-        if (this->_commonType) {
+        uint8_t row = (index - 1) / (_noOfPins - 1);
+        uint8_t col = (index - 1) % (_noOfPins - 1);
+        uint8_t x = *(_pins + row);
+        uint8_t y = *(_pins + ((col < row) ? col : (col + 1)));
+        if (_commonType) {
             node->vcc = x;
             node->gnd = y;
         } else { // just reverse
@@ -256,7 +256,7 @@ namespace ArduinoMatrixCharlieplex {
     }
 
     boolean MatrixCharlieplex::clear() {
-        return ((this->_state == MXCHARLIE_INACTIVE) ? true : _setNode(this->_activeNode, LOW));
+        return ((_state == MXCHARLIE_INACTIVE) ? true : _setNode(_activeNode, LOW));
     }
 
     boolean MatrixCharlieplex::reset() {
