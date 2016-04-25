@@ -51,9 +51,8 @@ namespace ArduinoMatrixCharlieplex {
 
     class MatrixCharlieplex {
     public:
-        //MatrixCharlieplex();
         MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType);
-        //DiodeNode* getActiveNode();
+        //DiodeNode getActiveNode();
         //uint8_t* getPins();
         boolean turnOn(uint8_t row, uint8_t col);
         boolean turnOff(uint8_t row, uint8_t col);
@@ -74,18 +73,18 @@ namespace ArduinoMatrixCharlieplex {
         uint16_t _maxNode;
         uint8_t _state;
         uint8_t _commonType;
-        DiodeNode* _activeNode;
+        DiodeNode _activeNode;
         void _init(boolean isStart);
         //void _print();
         boolean _reset();
-        boolean _execute(); //(boolean needClearance);
+        boolean _execute();
         boolean _upPin(uint8_t pin);
         boolean _downPin(uint8_t pin);
         boolean _sinkPin(uint8_t pin);
-        boolean _setNode(DiodeNode* pin, uint8_t state);
-        DiodeNode* _getNode(uint8_t row, uint8_t col);
-        DiodeNode* _getNode(uint16_t index);
-        BitMan* _getBitMan(uint16_t pin);
+        boolean _setNode(DiodeNode pin, uint8_t state);
+        DiodeNode _getNode(uint8_t row, uint8_t col);
+        DiodeNode _getNode(uint16_t index);
+        BitMan _getBitMan(uint16_t pin);
     };
 }
 #endif /* MATRIXCHARLIEPLEX_H */
