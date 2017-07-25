@@ -33,14 +33,13 @@ Copy the Arduino-Charlieplexing folder inside libraries to your own arduino-ide 
 
 This library is helpful if the LED array(or array of array) is visualized as a matrix (x,y) formation. (Note: here all indexing starts from 0. Hence, the first LED pointer will be (0,0) [in matrix notation] or 0 [in array notation])
 e.g 
+           (A 4x4 matrix|position notation)
 
-(A 4x4 matrix|position notation)
-
- *n|(x,y) [Array Index|Matrix Index]*
- 0|(0,0)  1|(0,1)  2|(0,2)  3|(0,3)
- 4|(1,0)  5|(1,1)  6|(1,2)  7|(1,3)
- 8|(2,0)  9|(2,1) 10|(2,2) 11|(2,3)
-12|(3,0) 13|(3,1) 14|(3,2) 15|(3,3)
+            *n|(x,y) [Array Index|Matrix Index]*
+            0|(0,0)  1|(0,1)  2|(0,2)  3|(0,3)
+            4|(1,0)  5|(1,1)  6|(1,2)  7|(1,3)
+            8|(2,0)  9|(2,1) 10|(2,2) 11|(2,3)
+           12|(3,0) 13|(3,1) 14|(3,2) 15|(3,3)
 
 There are two main functions: 
 1. turnOn: To turn a LED on for a given position. Can be supplied with either the matrix-position (x,y) or n'th position. e.g. testMatrix.turnOn(row, column) or  testMatrix.turnOn(position)
