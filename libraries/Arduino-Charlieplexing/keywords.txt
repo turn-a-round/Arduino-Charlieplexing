@@ -4,8 +4,8 @@
 # Class
 #######################################
 
-ArduinoMatrixCharlieplex	KEYWORD1	MatrixCharlieplexNamespace
-MatrixCharlieplex	KEYWORD1	MatrixCharlieplexLibrary
+ArduinoMatrixCharlieplex	KEYWORD1
+MatrixCharlieplex	KEYWORD1
 
 #######################################
 # Methods and Functions 
