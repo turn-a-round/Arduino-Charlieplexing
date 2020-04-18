@@ -3,11 +3,14 @@
  * Released for the sake of knowledge for mankind under The MIT License.
  */
 
-/* 
- * File:        MatrixCharlieplex.h
- * Description: Drive (N * (N-1)) number of "Charlieplxed" diode matrices
- *              (e.g. LED Matrix) with N number of outputs capable of tri-state.
- *              Inspired from http://wealoneonearth.blogspot.com/2013/03/design-note-charlieplexing-led-matrices.html
+/*
+ * File: MatrixCharlieplex.h
+ *
+ * Description:
+ * Drive (N * (N-1)) number of "Charlieplxed" diode matrices
+ * (e.g. LED Matrix) with N number of outputs capable of tri-state.
+ * Inspired from
+ * http://wealoneonearth.blogspot.com/2013/03/design-note-charlieplexing-led-matrices.html
  *
  *                   C A T H O D E
  *                   1 2 3 4 5 . N
@@ -19,7 +22,7 @@
  *                 .           X
  *                 N             X
  *
- * Author:      Tamal Patra <patra.tamal@gmail.com> 
+ * Author: Tamal Patra <patra.tamal@gmail.com>
  *
  * Created on March 29, 2016, 12:33 PM
  */
@@ -35,57 +38,56 @@
 
 #define MXCHARLIE_UPMASK 0b00000000
 
-#include<Arduino.h>
+#include <Arduino.h>
 
 namespace ArduinoMatrixCharlieplex {
 
-    typedef struct {
-        uint8_t vcc;
-        uint8_t gnd;
-    } DiodeNode;
+typedef struct {
+  uint8_t vcc;
+  uint8_t gnd;
+} DiodeNode;
 
-    typedef struct {
-        uint8_t x;
-        uint8_t y;
-    } BitMan;
+typedef struct {
+  uint8_t x;
+  uint8_t y;
+} BitMan;
 
-    class MatrixCharlieplex {
-    public:
-        MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType);
-        //DiodeNode getActiveNode();
-        //uint8_t* getPins();
-        boolean turnOn(uint8_t row, uint8_t col);
-        boolean turnOff(uint8_t row, uint8_t col);
-        boolean turnOn(uint16_t index);
-        boolean turnOff(uint16_t index);
-        boolean clear();
-        boolean reset();
+class MatrixCharlieplex {
+ public:
+  MatrixCharlieplex(uint8_t pins[], uint8_t noOfPins, uint8_t commonType);
+  // DiodeNode getActiveNode();
+  // uint8_t* getPins();
+  boolean turnOn(uint8_t row, uint8_t col);
+  boolean turnOff(uint8_t row, uint8_t col);
+  boolean turnOn(uint16_t index);
+  boolean turnOff(uint16_t index);
+  boolean clear();
+  boolean reset();
 
-    private:
-        uint8_t _exeDDRUp[2];
-        uint8_t _exeDDRDn[2];
-        uint8_t _exePORTUp[2];
-        uint8_t _exePORTDn[2];
-        uint8_t _ioDDR[2];
-        uint8_t _ioPORT[2];
-        uint8_t* _pins;
-        uint8_t _noOfPins;
-        uint16_t _maxNode;
-        uint8_t _state;
-        uint8_t _commonType;
-        DiodeNode _activeNode;
-        void _init(boolean isStart);
-        //void _print();
-        boolean _reset();
-        boolean _execute();
-        boolean _upPin(uint8_t pin);
-        boolean _downPin(uint8_t pin);
-        boolean _sinkPin(uint8_t pin);
-        boolean _setNode(DiodeNode pin, uint8_t state);
-        DiodeNode _getNode(uint8_t row, uint8_t col);
-        DiodeNode _getNode(uint16_t index);
-        BitMan _getBitMan(uint16_t pin);
-    };
-}
+ private:
+  uint8_t _exeDDRUp[2];
+  uint8_t _exeDDRDn[2];
+  uint8_t _exePORTUp[2];
+  uint8_t _exePORTDn[2];
+  uint8_t _ioDDR[2];
+  uint8_t _ioPORT[2];
+  uint8_t* _pins;
+  uint8_t _noOfPins;
+  uint16_t _maxNode;
+  uint8_t _state;
+  uint8_t _commonType;
+  DiodeNode _activeNode;
+  void _init(boolean isStart);
+  // void _print();
+  boolean _reset();
+  boolean _execute();
+  boolean _upPin(uint8_t pin);
+  boolean _downPin(uint8_t pin);
+  boolean _sinkPin(uint8_t pin);
+  boolean _setNode(DiodeNode pin, uint8_t state);
+  DiodeNode _getNode(uint8_t row, uint8_t col);
+  DiodeNode _getNode(uint16_t index);
+  BitMan _getBitMan(uint16_t pin);
+};
+}  // namespace ArduinoMatrixCharlieplex
 #endif /* MATRIXCHARLIEPLEX_H */
-
