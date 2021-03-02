@@ -1,8 +1,15 @@
-#include "MatrixCharlieplex.h"
+#include "MatrixCharlieplex.h"  // must be included
 
-using namespace ArduinoMatrixCharlieplex;
+using namespace ArduinoMatrixCharlieplex;  // must use the designated namespace
 
+// declare pins to control a (5 * 4) matrix Charlieplexed LED setup
 uint8_t Pins[] = {8, 9, 10, 11, 12};
+
+// declare a MatrixCharlieplex instance with
+//  - Pin array
+//  - number of pins
+//  - common row method (available options are MXCHARLIE_CA[Common
+//    Anode], MXCHARLIE_CC[Common Cathode], )
 MatrixCharlieplex mch(Pins, 5, MXCHARLIE_CA);
 
 int i = 0, j = 0, no = 0, count = 5;
@@ -27,10 +34,10 @@ void loop() {
     no = (++no % count);
     i = 0, j = 0;
   }
-  blink();
+  nextLed();
 }
 
-void blink() {
+void nextLed() {
   if (!busy) {
     busy = true;
     while (true) {

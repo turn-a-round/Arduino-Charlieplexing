@@ -44,3 +44,64 @@ e.g
 There are two main functions: 
 1. turnOn: To turn a LED on for a given position. Can be supplied with either the matrix-position (x,y) or n'th position. e.g. testMatrix.turnOn(row, column) or  testMatrix.turnOn(position)
 2. turnOff: To turn a LED off for a given position.same rule as above
+
+### Example
+
+```cpp
+#include "MatrixCharlieplex.h"  // must be included
+
+using namespace ArduinoMatrixCharlieplex;  // must use the designated namespace
+
+// declare pins to control a (5 * 4) matrix Charlieplexed LED setup
+uint8_t Pins[] = {8, 9, 10, 11, 12};
+
+// declare a MatrixCharlieplex instance with
+//  - Pin array
+//  - number of pins
+//  - common row method (available options are MXCHARLIE_CA[Common
+//    Anode], MXCHARLIE_CC[Common Cathode], )
+MatrixCharlieplex mch(Pins, 5, MXCHARLIE_CA);
+
+int i = 0, j = 0;
+unsigned long time;
+boolean busy = false;
+
+void setup() {
+  // put your setup code here, to run once:
+  time = millis();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (millis() > (time + 100)) {
+    time = millis();
+    nextLed();
+  }
+}
+
+// turn on 1 LED at a time at a regular interval
+void nextLed() {
+  if (!busy) {
+    busy = true;
+
+    /// for single parameter index based
+    mch.turnOn(i + 1);
+    increase();
+
+    /// for dual parameter matrix based
+    //    mch.turnOn(i+1, j+1);
+    //    increase2();
+    busy = false;
+  }
+}
+
+void increase() {
+  i = (++i % 20);
+}
+
+void increase2() {
+  j = ++j % 4;
+  if (j == 0)
+    i = (++i % 5);
+}
+```
