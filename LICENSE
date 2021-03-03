@@ -1,15 +1,3 @@
-= Arduino-Charlieplexing =
-
-A library for Arduino to control Charlieplexed LED matrices.
-
-Drive (N x (N-1)) number of "Charlieplxed" diode matrices
-(e.g. LED Matrix) with N number of outputs capable of tri-state.
-
-For more information about this library please visit us at
-https://github.com/turn-a-round/Arduino-Charlieplexing
-
-== License ==
-
 MIT License
 
 Copyright (c) 2021 Terran Source Cosmopolitan
